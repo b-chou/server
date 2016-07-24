@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import postGres from '../database/postgres';
 import cron from 'cron';
+import fetch from 'node-fetch';
 const CronJob = cron.CronJob;
 const schedule = [];
 // cache will clear when an event is deleted
@@ -196,8 +197,13 @@ const getCurrentEvents = (req, res) => {
       day: req.query.day,
     };
   }
+  const current = currentSchedule.slice(0, 5).map(event => {
+    event.hypes = cache[event.id] || 0;
+    return event;
+  });
+
   res.status(200).send({
-    events: currentSchedule.slice(0, 5),
+    events: current,
   });
 };
 // returns a spread of hypes per minute
