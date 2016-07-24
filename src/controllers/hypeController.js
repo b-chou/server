@@ -1,11 +1,8 @@
 import postGres from '../database/postgres';
-
 // cache will clear when an event is deleted
 const cache = {};
-
 const timeBox = {};
 const boolBox = {};
-
 // utility function to return minutes between a start and end time in format: 12:32
 const minuteDifference = (startTime, endTime) => {
   const start = startTime.split(':');
@@ -18,10 +15,9 @@ const minuteDifference = (startTime, endTime) => {
   const minutes = Math.floor(diff / 1000 / 60) + (hours * 60);
   return minutes;
 };
-
 // returns a numerical value given a 'Hypee' id -- get
 const getHypeCount = (req, res) => {
-  if (!boolBox[req.query.Hypee]) {
+  if (boolBox[req.query.Hypee] === false) {
     if (cache[req.query.Hypee]) {
       res.status(200).send({ hypeCount: cache[req.query.Hypee] });
     } else {
@@ -29,7 +25,9 @@ const getHypeCount = (req, res) => {
         where: {
           id: req.query.Hypee,
         },
-      }).then(hypeData => res.status(200).send({ hypeCount: hypeData.hypes }));
+      }).then(hypeData => {
+        res.status(200).send({ hypeCount: hypeData.hypes });
+      });
     }
   } else {
     postGres.Hypee.find({
@@ -63,19 +61,17 @@ const getHypeCount = (req, res) => {
     });
   }
 };
-
 // returns a numerical value after increasing hype value by 1, given a 'Hypee' id -- post
 // post this data with an associated timestamp for use for statistics later
 const increaseHypeCount = (req, res) => {
-  if (cache.req.body.Hypee) {
+  if (cache[req.body.Hypee]) {
     cache[req.body.Hypee]++;
   } else {
     cache[req.body.Hypee] = 1;
   }
-  timeBox[req.query.Hypee][0].push(req.body.timeStamp);
+  timeBox[req.body.Hypee][0].push(new Date());
   res.status(200).send({ hypeCount: cache[req.body.Hypee] });
 };
-
 // deletes a cached version of an event when it is over -- delete
 const deleteHypeEvent = (req, res) => {
   postGres.Hypee.find({
@@ -92,16 +88,13 @@ const deleteHypeEvent = (req, res) => {
   delete boolBox[req.body.Hypee];
   res.sendStatus(200);
 };
-
 // returns all events in an array
 const getAllEvents = (req, res) => {
   postGres.Hypee.findAll()
     .then(data => res.status(200).send({ events: data }));
 };
-
 // returns a spread of hypes per minute
 const getTimeline = (req, res) => {
   res.send({ data: timeBox[req.query.Hypee][1], totalTime: timeBox[req.query.Hypee][2] });
 };
-
 export default { getHypeCount, increaseHypeCount, deleteHypeEvent, getAllEvents, getTimeline };
