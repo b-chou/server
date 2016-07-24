@@ -208,7 +208,11 @@ const getCurrentEvents = (req, res) => {
 };
 // returns a spread of hypes per minute
 const getTimeline = (req, res) => {
-  res.send({ data: timeBox[req.query.Hypee][1], totalTime: timeBox[req.query.Hypee][2] });
+  if (timeBox[req.query.Hypee]) {
+    res.send({ data: timeBox[req.query.Hypee][1], totalTime: timeBox[req.query.Hypee][2] });
+  } else {
+    res.send({ data: [], totalTime: 0 });
+  }
 };
 // returns a specific Hypee given an id
 const getSpecificEvent = (req, res) => {
