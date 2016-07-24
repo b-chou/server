@@ -1,6 +1,7 @@
+/* eslint-disable */
 const promise = require('bluebird');
 const options = {
-  promiseLib: promise
+  promiseLib: promise,
 };
 const pgp = require('pg-promise')(options);
 
@@ -9,7 +10,7 @@ const connectionString = {
   port: 5432,
   database: 'hack1',
   user: 'ajgrande',
-  password: 'hackreactor'
+  password: 'hackreactor',
 };
 
 const db = pgp(connectionString);

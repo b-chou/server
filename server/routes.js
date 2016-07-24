@@ -3,6 +3,6 @@
 var controller = require('./controller.js');
 
 module.exports = function (app) {
-  // app.post('/signup', controller.signup);
-
+  app.route('/validation')
+  	.get(controller.redisCheck);
 };
