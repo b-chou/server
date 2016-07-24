@@ -208,6 +208,7 @@ const getCurrentEvents = (req, res) => {
 };
 // returns a spread of hypes per minute
 const getTimeline = (req, res) => {
+  console.log(timeBox, '***********');
   if (timeBox[req.query.Hypee]) {
     res.send({ data: timeBox[req.query.Hypee][1], totalTime: timeBox[req.query.Hypee][2] });
   } else {
