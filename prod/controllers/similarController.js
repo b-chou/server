@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _postgres = require('../database/postgres');
 
+var _postgres2 = _interopRequireDefault(_postgres);
+
 var _sequelize = require('sequelize');
 
 var _sequelize2 = _interopRequireDefault(_sequelize);
@@ -14,11 +16,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var getSimilar = function getSimilar(req, res) {
   var hypeeID = req.body.id;
-  _postgres.Similar.findAll({
+  _postgres2.default.Similar.findAll({
     where: {
       originalHypee: hypeeID,
       include: [{
-        model: _postgres.Hypee,
+        model: _postgres2.default.Hypee,
         as: 'originalHypee'
       }]
     },

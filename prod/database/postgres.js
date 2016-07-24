@@ -43,11 +43,15 @@ var User = sequelize.define('User', {
 // Artists and Acts
 var Hypee = sequelize.define('Hypee', {
   name: _sequelize2.default.STRING,
-  hypes: _sequelize2.default.INTEGER,
+  hypes: {
+    type: _sequelize2.default.INTEGER,
+    defaultValue: 0
+  },
   description: _sequelize2.default.STRING,
   location: _sequelize2.default.STRING,
   start_time: _sequelize2.default.STRING,
-  end_time: _sequelize2.default.STRING
+  end_time: _sequelize2.default.STRING,
+  day: _sequelize2.default.INTEGER
 });
 
 // Fans
@@ -92,4 +96,4 @@ sequelize.sync();
 // run this in pg-server root to log into amazon rds db instance
 // psql --host=hack1.c67fs1cxhe7n.us-west-2.rds.amazonaws.com --port=5432 --username=ajgrande --password --dbname=hack1
 
-exports.default = { Similar: Similar, Hyper: Hyper, User: User, Hypee: Hypee, Category: Category };
+exports.default = { Similar: Similar, Hyper: Hyper, User: User, Hypee: Hypee, Category: Category, sequelize: sequelize };
