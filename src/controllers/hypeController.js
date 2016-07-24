@@ -49,6 +49,14 @@ const getHypeCount = (req, res) => {
       // clear the set interval after x minutes
       setTimeout(() => {
         clearInterval(timeBar);
+        fetch('http://localhost:8000/hypeCount', {
+          method: 'DELETE',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ Hypee: req.query.Hypee }),
+        });
       }, 60000 * (minuteToElapse + 10));
       boolBox[req.query.Hypee] = true;
       res.status(200).send({ hypeCount: hypeData.hypes });
@@ -74,7 +82,12 @@ const deleteHypeEvent = (req, res) => {
     where: {
       id: req.body.Hypee,
     },
-  }).then(hypeData => hypeData.updateAttributes({ hypes: cache[req.body.Hypee] }));
+  }).then(hypeData => {
+    let total = 0;
+    // eslint-disable-next-line
+    cache[req.body.Hypee].forEach(val => total += val);
+    hypeData.updateAttributes({ hypes: total });
+  });
   delete cache[req.body.Hypee];
   delete boolBox[req.body.Hypee];
   res.sendStatus(200);
