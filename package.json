@@ -8,7 +8,7 @@
     "lint": "eslint --quiet server/ && eslint --quiet client/",
     "build:dev": "babel src -d dev",
     "start": "node prod/server.js",
-    "start:dev": "babel --watch src -d dev & nodemon dev/server.js"
+    "dev": "babel --watch src -d dev & nodemon dev/server.js"
   },
   "dependencies": {
     "babel-cli": "^6.10.1",

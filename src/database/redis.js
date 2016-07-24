@@ -2,8 +2,8 @@ import redis from 'redis';
 import Promise from 'bluebird';
 
 // Connection Configurations
-const PORT = process.env.REDIS_PORT || 'localhost';
-const HOST = process.env.REDIS_HOST || '6379';
+const PORT = process.env.REDIS_PORT || '6379';
+const HOST = process.env.REDIS_HOST || 'localhost';
 
 Promise.promisifyAll(redis.RedisClient.prototype);
 Promise.promisifyAll(redis.Multi.prototype);

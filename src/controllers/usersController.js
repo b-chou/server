@@ -1,3 +1,6 @@
+import userBase from '../database/redis';
+import postGres from '../database/postgres';
+
 const redisCheck = (req, res) => {
   userBase.get(req.query.deviceId, (err, value) => {
     if (value) {
@@ -27,6 +30,6 @@ const redisCheck = (req, res) => {
       });
     }
   });
-},
+};
 
 export default { redisCheck };
