@@ -1,15 +1,10 @@
-// import promise from 'bluebird';
-// import pgPromise from 'pg-promise';
 import Sequelize from 'sequelize';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// const options = { promiseLib: promise };
-// // const pgp = pgPromise(options);
-
 const connectionString = {
   database: process.env.POSTGRES_DATABASE || 'hack1',
-  username: process.env.POSTGRES_USER || 'ajgrande',
+  username: process.env.POSTGRES_USER || 'root',
   password: process.env.POSTGRES_PASSWORD || '',
 };
 const options = {
@@ -23,47 +18,59 @@ const sequelize = new Sequelize(connectionString.database, connectionString.user
 sequelize
   .authenticate()
   .then(() => {
-    //eslint-disable-next-line
     console.log('Connection has been established successfully.');
   })
   .catch((err) => {
-    //eslint-disable-next-line
     console.log('Unable to connect to the database:', err);
   });
 
-const Users = sequelize.define('Users', {
-  displayName: {
-    type: Sequelize.STRING,
-  },
-  avatar: {
-    type: Sequelize.INTEGER,
-  },
+const User = sequelize.define('User', {
+  displayName: Sequelize.STRING,
+  avatar: Sequelize.INTEGER,
 });
 
+// Artists and Acts
 const Hypee = sequelize.define('Hypee', {
-  name: {
-    type: Sequelize.STRING,
-  },
-  hypes: {
-    type: Sequelize.INTEGER,
-  },
-  description: {
-    type: Sequelize.STRING,
-  },
+  name: Sequelize.STRING,
+  hypes: Sequelize.INTEGER,
+  description: Sequelize.STRING,
+  location: Sequelize.STRING,
+  start_time: Sequelize.STRING,
+  end_time: Sequelize.STRING,
 });
+
+// Fans
+const Hyper = sequelize.define('Hyper', {
+  name: Sequelize.STRING,
+  avatar: Sequelize.INTEGER,
+});
+
+// Hype vote for Hypees
+const Hype = sequelize.define('Hype', {
+  date: {
+    type: Sequelize.DATE,
+    default: Sequelize.NOW,
+  }
+});
+
+const Similar = sequelize.define('Similar', {})
 
 const Category = sequelize.define('Category', {
-  name: {
-    type: Sequelize.STRING,
-  },
+  name: Sequelize.STRING,
 });
 
-const SimilarActs = sequelize.define('SimilarActs');
-
 Category.belongsTo(Hypee);
+Category.belongsTo(Hype);
+Hype.belongsTo(Hyper);
+Hype.belongsTo(Hypee);
+Similar.belongsTo(Hypee, { as: 'originalHypee' });
+Similar.belongsTo(Hypee, { as: 'similarHypee' });
+
+sequelize.sync();
 
 // sequelize
 // .sync({ force: true });
+
 
 // start postgres
 // postgres -D /usr/local/var/postgres
@@ -74,4 +81,4 @@ Category.belongsTo(Hypee);
 // run this in pg-server root to log into amazon rds db instance
 // psql --host=hack1.c67fs1cxhe7n.us-west-2.rds.amazonaws.com --port=5432 --username=ajgrande --password --dbname=hack1
 
-export default { Users, Hypee, Category };
+export default { Similar, Hyper, User, Hypee, Category };
