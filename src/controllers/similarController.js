@@ -1,13 +1,13 @@
-import { Similar, Hypee } from '../database/postgres';
+import postGres from '../database/postgres';
 import Sequelize from 'sequelize';
 
 const getSimilar = (req, res) => {
   const hypeeID = req.body.id;
-  Similar.findAll({
+  postGres.Similar.findAll({
     where: {
       originalHypee: hypeeID,
       include: [{
-        model: Hypee,
+        model: postGres.Hypee,
         as: 'originalHypee',
       }],
     },
