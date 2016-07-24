@@ -197,8 +197,13 @@ const getCurrentEvents = (req, res) => {
       day: req.query.day,
     };
   }
+  const current = currentSchedule.slice(0, 5).map(event => {
+    event.hypes = cache[event.id] || 0;
+    return event;
+  });
+
   res.status(200).send({
-    events: currentSchedule.slice(0, 5),
+    events: current,
   });
 };
 // returns a spread of hypes per minute
