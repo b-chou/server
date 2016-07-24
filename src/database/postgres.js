@@ -24,6 +24,7 @@ sequelize
     console.log('Unable to connect to the database:', err);
   });
 
+// Fans
 const User = sequelize.define('User', {
   displayName: Sequelize.STRING,
   avatar: Sequelize.INTEGER,
@@ -43,12 +44,6 @@ const Hypee = sequelize.define('Hypee', {
   day: Sequelize.INTEGER,
 });
 
-// Fans
-const Hyper = sequelize.define('Hyper', {
-  name: Sequelize.STRING,
-  avatar: Sequelize.INTEGER,
-});
-
 // Hype vote for Hypees
 const Hype = sequelize.define('Hype', {
   date: {
@@ -65,7 +60,7 @@ const Category = sequelize.define('Category', {
 
 Category.belongsTo(Hypee);
 Category.belongsTo(Hype);
-Hype.belongsTo(Hyper);
+Hype.belongsTo(User);
 Hype.belongsTo(Hypee);
 Similar.belongsTo(Hypee, { as: 'originalHypee' });
 Similar.belongsTo(Hypee, { as: 'similarHypee' });
@@ -85,4 +80,4 @@ sequelize.sync();
 // run this in pg-server root to log into amazon rds db instance
 // psql --host=hack1.c67fs1cxhe7n.us-west-2.rds.amazonaws.com --port=5432 --username=ajgrande --password --dbname=hack1
 
-export default { Similar, Hyper, User, Hypee, Category, sequelize };
+export default { Similar, User, Hypee, Category, sequelize };
