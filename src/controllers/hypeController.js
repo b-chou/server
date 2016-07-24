@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import postGres from '../database/postgres';
 import cron from 'cron';
 const CronJob = cron.CronJob;
@@ -156,7 +157,17 @@ const deleteHypeEvent = (req, res) => {
 };
 // returns all events in an array
 const getAllEvents = (req, res) => {
-  postGres.Hypee.findAll()
+  const options = {};
+  if (req.query.day) {
+    options.where = {
+      day: req.query.day,
+    };
+  }
+  postGres.Hypee.findAll(options)
+    .then(data => data.map(event => {
+      event.hypes = cache[event.id] || 0;
+      return event;
+    }))
     .then(data => res.status(200).send({ events: data }));
 };
 // returns a spread of hypes per minute
