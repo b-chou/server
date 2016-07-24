@@ -20,7 +20,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var redisCheck = function redisCheck(req, res) {
   _redis2.default.get(req.query.deviceId, function (err, value) {
     if (value) {
-      _postgres2.default.Users.find({
+      _postgres2.default.User.find({
         where: {
           id: value
         }
@@ -35,7 +35,7 @@ var redisCheck = function redisCheck(req, res) {
     } else {
       _redis2.default.keys('*', function (e, keys) {
         _redis2.default.set(req.query.deviceId, keys.length + 1);
-        _postgres2.default.Users.create({
+        _postgres2.default.User.create({
           displayName: 'bob',
           avatar: 1
         });
@@ -52,7 +52,7 @@ var redisCheck = function redisCheck(req, res) {
 
 // adds a new user into the database given a displayName and a numerical avatar value
 var postUser = function postUser(req, res) {
-  _postgres2.default.Users.create({
+  _postgres2.default.User.create({
     displayName: req.body.displayName,
     avatar: req.body.avatar
   }).then(function () {
@@ -62,7 +62,7 @@ var postUser = function postUser(req, res) {
 
 // change user information
 var changeUserInfo = function changeUserInfo(req, res) {
-  _postgres2.default.Users.find({
+  _postgres2.default.User.find({
     where: {
       id: req.body.id
     }

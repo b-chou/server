@@ -7,7 +7,7 @@ import postGres from '../database/postgres';
 const redisCheck = (req, res) => {
   userBase.get(req.query.deviceId, (err, value) => {
     if (value) {
-      postGres.Users.find({
+      postGres.User.find({
         where: {
           id: value,
         },
@@ -22,7 +22,7 @@ const redisCheck = (req, res) => {
     } else {
       userBase.keys('*', (e, keys) => {
         userBase.set(req.query.deviceId, keys.length + 1);
-        postGres.Users.create({
+        postGres.User.create({
           displayName: 'bob',
           avatar: 1,
         });
@@ -39,7 +39,7 @@ const redisCheck = (req, res) => {
 
 // adds a new user into the database given a displayName and a numerical avatar value
 const postUser = (req, res) => {
-  postGres.Users.create({
+  postGres.User.create({
     displayName: req.body.displayName,
     avatar: req.body.avatar,
   }).then(() => res.sendStatus(300));
@@ -47,7 +47,7 @@ const postUser = (req, res) => {
 
 // change user information
 const changeUserInfo = (req, res) => {
-  postGres.Users.find({
+  postGres.User.find({
     where: {
       id: req.body.id,
     },
