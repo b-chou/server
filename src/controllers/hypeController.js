@@ -204,6 +204,14 @@ const getCurrentEvents = (req, res) => {
 const getTimeline = (req, res) => {
   res.send({ data: timeBox[req.query.Hypee][1], totalTime: timeBox[req.query.Hypee][2] });
 };
+// returns a specific Hypee given an id
+const getSpecificEvent = (req, res) => {
+  postGres.Hypee.find({
+    where: {
+      id: req.query.id,
+    },
+  }).then(listing => res.send({ data: listing }));
+};
 
 export default {
   getHypeCount,
@@ -212,4 +220,5 @@ export default {
   getAllEvents,
   getTimeline,
   getCurrentEvents,
+  getSpecificEvent,
 };

@@ -8,12 +8,20 @@ var _postgres = require('../database/postgres');
 
 var _postgres2 = _interopRequireDefault(_postgres);
 
+var _cron = require('cron');
+
+var _cron2 = _interopRequireDefault(_cron);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/* eslint-disable no-param-reassign */
+var CronJob = _cron2.default.CronJob;
+var schedule = [];
 // cache will clear when an event is deleted
 var cache = {};
 var timeBox = {};
 var boolBox = {};
+
 // utility function to return minutes between a start and end time in format: 12:32
 var minuteDifference = function minuteDifference(startTime, endTime) {
   var start = startTime.split(':');
@@ -26,54 +34,110 @@ var minuteDifference = function minuteDifference(startTime, endTime) {
   var minutes = Math.floor(diff / 1000 / 60) + hours * 60;
   return minutes;
 };
-// returns a numerical value given a 'Hypee' id -- get
-var getHypeCount = function getHypeCount(req, res) {
-  if (boolBox[req.query.Hypee] === false) {
-    if (cache[req.query.Hypee]) {
-      res.status(200).send({ hypeCount: cache[req.query.Hypee] });
+
+_postgres2.default.Hypee.findAll().then(function (hypees) {
+  hypees.forEach(function (hypee) {
+    var start = hypee.start_time.split(':');
+    var end = hypee.end_time.split(':');
+    var cronDay = hypee.day + 4;
+    var cronMinute = '00';
+    var cronHour = '12';
+    if (start[0] === end[0]) {
+      cronHour = start[0];
     } else {
-      _postgres2.default.Hypee.find({
-        where: {
-          id: req.query.Hypee
-        }
-      }).then(function (hypeData) {
-        console.log('!!');
-        res.status(200).send({ hypeCount: hypeData.hypes });
-      });
+      cronHour = start[0] + '-' + end[0];
     }
-  } else {
-    _postgres2.default.Hypee.find({
-      where: {
-        id: req.query.Hypee
-      }
-    }).then(function (hypeData) {
-      console.log(hypeData, 'aksja;flaskldf');
-      var minuteToElapse = minuteDifference(hypeData.start_time, hypeData.end_time);
-      // first array corresponds to all new entries within a minute time frame
-      // second array corresponds to an array of total values per minute
-      timeBox[req.query.Hypee] = [[], [], minuteToElapse];
-      console.log(timeBox[req.query.Hypee], req.query.Hypee, '*******');
-      // update values every minute
-      var timeBar = setInterval(function () {
-        timeBox[req.query.Hypee][1].push(timeBox[req.query.Hypee][0].length);
-        timeBox[req.query.Hypee][0].splice(0, timeBox[req.query.Hypee][0].length);
-      }, 60000);
-      // clear the set interval after x minutes
-      setTimeout(function () {
-        clearInterval(timeBar);
+    if (Number(start[1]) > Number(end[1])) {
+      cronMinute = start[1] + '-59,0-' + end[1];
+    } else {
+      cronMinute = start[1] + '-' + end[1];
+    }
+    // const cronTime = '00 * * * * *';
+    var cronTime = '00 ' + cronMinute + ' ' + cronHour + ' ' + cronDay + ' 9 *';
+    console.log('Creating job for', hypee.name, cronTime);
+    schedule.push(new CronJob({
+      cronTime: cronTime,
+      onTick: function onTick() {
+        if (!timeBox[hypee.id]) {
+          var minuteToElapse = minuteDifference(hypee.start_time, hypee.end_time);
+          timeBox[hypee.id] = [[], [], minuteToElapse];
+        }
+        timeBox[hypee.id][1].push(timeBox[hypee.id][0].length);
+        timeBox[hypee.id][0].splice(0, timeBox[hypee.id][0].length);
+        console.log(timeBox);
+      },
+      onComplete: function onComplete() {
         fetch('http://localhost:8000/hypeCount', {
           method: 'DELETE',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ Hypee: req.query.Hypee })
+          body: JSON.stringify({ Hypee: hypee.id })
         });
-      }, 60000 * (minuteToElapse + 10));
-      boolBox[req.query.Hypee] = true;
+      },
+      start: true,
+      timeZone: 'America/Los_Angeles'
+    }));
+  });
+});
+
+// returns a numerical value given a 'Hypee' id -- get
+var getHypeCount = function getHypeCount(req, res) {
+  if (cache[req.query.Hypee]) {
+    res.status(200).send({ hypeCount: cache[req.query.Hypee] });
+  } else {
+    _postgres2.default.Hypee.find({
+      where: {
+        id: req.query.Hypee
+      }
+    }).then(function (hypeData) {
       res.status(200).send({ hypeCount: hypeData.hypes });
     });
   }
+  // if (boolBox[req.query.Hypee] !== undefined) {
+  //   if (cache[req.query.Hypee]) {
+  //     res.status(200).send({ hypeCount: cache[req.query.Hypee] });
+  //   } else {
+  //     postGres.Hypee.find({
+  //       where: {
+  //         id: req.query.Hypee,
+  //       },
+  //     }).then(hypeData => {
+  //       res.status(200).send({ hypeCount: hypeData.hypes });
+  //     });
+  //   }
+  // } else {
+  //   postGres.Hypee.find({
+  //     where: {
+  //       id: req.query.Hypee,
+  //     },
+  //   }).then(hypeData => {
+  //     const minuteToElapse = minuteDifference(hypeData.start_time, hypeData.end_time);
+  //     // first array corresponds to all new entries within a minute time frame
+  //     // second array corresponds to an array of total values per minute
+  //     timeBox[req.query.Hypee] = [[], [], minuteToElapse];
+  //     // update values every minute
+  //     const timeBar = setInterval(() => {
+  //       timeBox[req.query.Hypee][1].push(timeBox[req.query.Hypee][0].length);
+  //       timeBox[req.query.Hypee][0].splice(0, timeBox[req.query.Hypee][0].length);
+  //     }, 60000);
+  //     // clear the set interval after x minutes
+  //     setTimeout(() => {
+  //       clearInterval(timeBar);
+  //       fetch('http://localhost:8000/hypeCount', {
+  //         method: 'DELETE',
+  //         headers: {
+  //           Accept: 'application/json',
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({ Hypee: req.query.Hypee }),
+  //       });
+  //     }, 60000 * (minuteToElapse + 10));
+  //     boolBox[req.query.Hypee] = true;
+  //     res.status(200).send({ hypeCount: hypeData.hypes });
+  //   });
+  // }
 };
 // returns a numerical value after increasing hype value by 1, given a 'Hypee' id -- post
 // post this data with an associated timestamp for use for statistics later
@@ -83,8 +147,9 @@ var increaseHypeCount = function increaseHypeCount(req, res) {
   } else {
     cache[req.body.Hypee] = 1;
   }
-  console.log(timeBox);
-  timeBox[req.body.Hypee][0].push(req.body.timeStamp);
+  if (timeBox[req.body.Hypee]) {
+    timeBox[req.body.Hypee][0].push(new Date());
+  }
   res.status(200).send({ hypeCount: cache[req.body.Hypee] });
 };
 // deletes a cached version of an event when it is over -- delete
@@ -107,7 +172,18 @@ var deleteHypeEvent = function deleteHypeEvent(req, res) {
 };
 // returns all events in an array
 var getAllEvents = function getAllEvents(req, res) {
-  _postgres2.default.Hypee.findAll().then(function (data) {
+  var options = {};
+  if (req.query.day) {
+    options.where = {
+      day: req.query.day
+    };
+  }
+  _postgres2.default.Hypee.findAll(options).then(function (data) {
+    return data.map(function (event) {
+      event.hypes = cache[event.id] || 0;
+      return event;
+    });
+  }).then(function (data) {
     return res.status(200).send({ events: data });
   });
 };

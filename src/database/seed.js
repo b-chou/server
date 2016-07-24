@@ -19,6 +19,7 @@ postGres.sequelize.sync({ force: true })
           end_time: event.end,
           location: stages[i],
           day: 1,
+          description: event.description,
         });
       }
     }
@@ -35,6 +36,7 @@ postGres.sequelize.sync({ force: true })
           end_time: event.end,
           location: stages[i],
           day: 2,
+          description: event.description,
         });
       }
     }    
@@ -51,6 +53,7 @@ postGres.sequelize.sync({ force: true })
           end_time: event.end,
           location: stages[i],
           day: 3,
+          description: event.description,
         });
       }
     }    
