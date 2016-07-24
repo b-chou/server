@@ -7,7 +7,26 @@ const schedule = [];
 const cache = {};
 const timeBox = {};
 const boolBox = {};
-
+let currentSchedule;
+postGres.Hypee.findAll()
+  .then(data => data.map(event => {
+    event.hypes = cache[event.id] || 0;
+    return event;
+  }))
+  .then(data => {
+    const d = new Date();
+    const utc = d.getTime() - (d.getTimezoneOffset() * 60000);
+    const date = new Date(utc + (3600000 * 7));
+    const currHour = date.getHours();
+    return data.filter(event => {
+      const endHour = Number(event.end_time.split(':')[0]);
+      return endHour > currHour;
+    });
+  })
+  .then(data => {
+    currentSchedule = data;
+    return null;
+  });
 // utility function to return minutes between a start and end time in format: 12:32
 const minuteDifference = (startTime, endTime) => {
   const start = startTime.split(':');
@@ -41,7 +60,6 @@ postGres.Hypee.findAll()
       }
       // const cronTime = '00 * * * * *';
       const cronTime = `00 ${cronMinute} ${cronHour} ${cronDay} 9 *`;
-      console.log('Creating job for', hypee.name, cronTime);
       schedule.push(new CronJob({
         cronTime,
         onTick: () => {
@@ -51,9 +69,9 @@ postGres.Hypee.findAll()
           }
           timeBox[hypee.id][1].push(timeBox[hypee.id][0].length);
           timeBox[hypee.id][0].splice(0, timeBox[hypee.id][0].length);
-          console.log(timeBox);
         },
         onComplete: () => {
+          currentSchedule.shift();
           fetch('http://localhost:8000/hypeCount', {
             method: 'DELETE',
             headers: {
@@ -170,8 +188,28 @@ const getAllEvents = (req, res) => {
     }))
     .then(data => res.status(200).send({ events: data }));
 };
+
+const getCurrentEvents = (req, res) => {
+  const options = {};
+  if (req.query.day) {
+    options.where = {
+      day: req.query.day,
+    };
+  }
+  res.status(200).send({
+    events: currentSchedule.slice(0, 5),
+  });
+};
 // returns a spread of hypes per minute
 const getTimeline = (req, res) => {
   res.send({ data: timeBox[req.query.Hypee][1], totalTime: timeBox[req.query.Hypee][2] });
 };
-export default { getHypeCount, increaseHypeCount, deleteHypeEvent, getAllEvents, getTimeline };
+
+export default {
+  getHypeCount,
+  increaseHypeCount,
+  deleteHypeEvent,
+  getAllEvents,
+  getTimeline,
+  getCurrentEvents,
+};
