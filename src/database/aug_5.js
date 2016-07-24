@@ -1,6 +1,6 @@
 // 8/5 (August 5th, Friday)
 
-const Lands_End = [
+const LandsEnd = [
   {
     start: '12:45',
     end: '13:35',
@@ -71,7 +71,7 @@ const Sutro = [
   },
 ];
 
-const Twin_Peaks = [
+const TwinPeaks = [
   {
     start: '12:45',
     end: '13:30',
@@ -137,7 +137,7 @@ const Panhandle = [
   },
 ];
 
-const The_House_by_Heineken = [
+const TheHousebyHeineken = [
   {
     start: '12:00',
     end: '13:30',
@@ -170,11 +170,14 @@ const The_House_by_Heineken = [
   },
 ];
 
-const The_Barbary = [
+const TheBarbary = [
   {
     start: '13:20',
     end: '14:30',
-    name: 'The Romane Event With Paco Romane & Friends: Featuring Moshe Kasher, Josef Anolin, Josh Androsky, Kaseem Bently, Clare O\'Kane, Spencer Devine, David Gborie, Krista Fatka, David Roth, Jane Harrison, and Casey Ley',
+    name: `The Romane Event With Paco Romane & Friends: 
+      Featuring Moshe Kasher, Josef Anolin, Josh Androsky, 
+      Kaseem Bently, Clare O\'Kane, Spencer Devine, David Gborie, 
+      Krista Fatka, David Roth, Jane Harrison, and Casey Ley`,
   },
   {
     start: '15:00',
@@ -198,11 +201,11 @@ const The_Barbary = [
   },
 ];
 
-module.exports = {
-  Lands_End: Lands_End,
-  Sutro: Sutro,
-  Twin_Peaks: Twin_Peaks,
-  Panhandle: Panhandle,
-  The_House_by_Heineken: The_House_by_Heineken,
-  The_Barbary: The_Barbary,
+export default {
+  LandsEnd,
+  Sutro,
+  TwinPeaks,
+  Panhandle,
+  TheHousebyHeineken,
+  TheBarbary,
 };
