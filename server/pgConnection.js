@@ -1,21 +1,30 @@
 /* eslint-disable */
-const promise = require('bluebird');
-const options = {
-  promiseLib: promise,
-};
-const pgp = require('pg-promise')(options);
-
-const connectionString = {
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('hack1', 'ajgrande', 'hackreactor', {
   host: 'hack1.c67fs1cxhe7n.us-west-2.rds.amazonaws.com',
-  port: 5432,
-  database: 'hack1',
-  user: 'ajgrande',
-  password: 'hackreactor',
-};
+  dialect: 'postgres',
+});
 
-const db = pgp(connectionString);
+sequelize
+  .authenticate()
+  .then(() => {
+    //eslint-disable-next-line
+    console.log('Connection has been established successfully.');
+  })
+  .catch((err) => {
+    //eslint-disable-next-line
+    console.log('Unable to connect to the database:', err);
+  });
 
-module.exports = db;
+const Users = sequelize.define('Users', {
+  displayName: {
+    type: Sequelize.STRING,
+  },
+  
+});
+// Users.sequelize
+// .sync({ force: true });
+module.exports = Users;
 
 // start postgres
 // postgres -D /usr/local/var/postgres

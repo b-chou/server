@@ -1,6 +1,6 @@
 // 8/5 (August 5th, Friday)
 
-const Lands_End = [
+Lands_End = [
   {
     start: '12:45',
     end: '13:35',
@@ -33,7 +33,7 @@ const Lands_End = [
   },
 ];
 
-const Sutro = [
+Sutro = [
   {
     start: '12:00',
     end: '12:45',
@@ -71,7 +71,7 @@ const Sutro = [
   },
 ];
 
-const Twin_Peaks = [
+Twin_Peaks = [
   {
     start: '12:45',
     end: '13:30',
@@ -101,10 +101,10 @@ const Twin_Peaks = [
     start: '20:40',
     end: '21:55',
     name: 'J. Cole',
-  },
+  }
 ];
 
-const Panhandle = [
+Panhandle = [
   {
     start: '12:00',
     end: '12:40',
@@ -134,10 +134,10 @@ const Panhandle = [
     start: '19:50',
     end: '20:35',
     name: 'Hiatus Kaiyote',
-  },
+  }
 ];
 
-const The_House_by_Heineken = [
+The_House_by_Heineken = [
   {
     start: '12:00',
     end: '13:30',
@@ -167,10 +167,10 @@ const The_House_by_Heineken = [
     start: '12:00',
     end: '12:40',
     name: 'Down and Outlaws',
-  },
+  }
 ];
 
-const The_Barbary = [
+The_Barbary = [
   {
     start: '13:20',
     end: '14:30',
@@ -195,14 +195,14 @@ const The_Barbary = [
     start: '18:45',
     end: '19:50',
     name: 'Anthony Jeslnik, Kyle Kinane and Claudia O\'Doherty',
-  },
+  }
 ];
 
 module.exports = {
-  Lands_End: Lands_End,
-  Sutro: Sutro,
-  Twin_Peaks: Twin_Peaks,
-  Panhandle: Panhandle,
-  The_House_by_Heineken: The_House_by_Heineken,
-  The_Barbary: The_Barbary,
+  'Lands_End': Lands_End,
+  'Sutro': Sutro,
+  'Twin_Peaks': Twin_Peaks,
+  'Panhandle': Panhandle,
+  'The_House_by_Heineken': The_House_by_Heineken,
+  'The_Barbary': The_Barbary,
 };

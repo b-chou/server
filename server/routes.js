@@ -1,8 +1,7 @@
-'use strict';
+const controller = require('./controller.js');
 
-var controller = require('./controller.js');
-
-module.exports = function (app) {
+module.exports = app => {
   app.route('/validation')
-  	.get(controller.redisCheck);
+    .get(controller.redisCheck)
+    .post(controller.postUser);
 };
