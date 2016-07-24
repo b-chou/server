@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import postGres from '../database/postgres';
 import cron from 'cron';
+import fetch from 'node-fetch';
 const CronJob = cron.CronJob;
 const schedule = [];
 // cache will clear when an event is deleted
