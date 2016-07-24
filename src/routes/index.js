@@ -20,4 +20,7 @@ router.route('/hypeCount')
 router.route('/getAllEvents')
   .get(hypeController.getAllEvents);
 
+router.route('/getHypeTimeline')
+  .get(hypeController.hypeTimeline);
+
 export default router;
