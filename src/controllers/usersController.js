@@ -1,6 +1,9 @@
 import userBase from '../database/redis';
 import postGres from '../database/postgres';
 
+// checks if a device is already registered in the redis store
+// expects a deviceId, will return userInfo which contains a boolean
+// true = new user, false = existing user
 const redisCheck = (req, res) => {
   userBase.get(req.query.deviceId, (err, value) => {
     if (value) {
@@ -9,7 +12,7 @@ const redisCheck = (req, res) => {
           id: value,
         },
       }).then(userInfo => {
-        res.send({
+        res.status(200).send({
           userInfo: {
             newUser: false,
             info: userInfo,
@@ -25,7 +28,7 @@ const redisCheck = (req, res) => {
         });
         // user does not exist, it will return to native app newUser = true
         // user will have to type in display name then update
-        res.send({
+        res.status(400).send({
           userId: keys.length + 1,
           newUser: true,
         });
@@ -34,11 +37,12 @@ const redisCheck = (req, res) => {
   });
 };
 
+// adds a new user into the database given a displayName and a numerical avatar value
 const postUser = (req, res) => {
   postGres.Users.create({
     displayName: req.body.displayName,
     avatar: req.body.avatar,
-  }).then(() => res.sendStatus(200));
+  }).then(() => res.sendStatus(300));
 };
 
 export default { redisCheck, postUser };

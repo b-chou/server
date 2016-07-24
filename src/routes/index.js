@@ -1,5 +1,6 @@
 import express from 'express';
 import usersController from '../controllers/usersController';
+import hypeController from '../controllers/hypeController';
 
 // Create Router
 // eslint-disable-next-line
@@ -7,7 +8,12 @@ const router = express.Router();
 
 // router.get('/api/users', usersController.getUsers);
 router.route('/validation')
-    .get(usersController.redisCheck)
-    .post(usersController.postUser);
+  .get(usersController.redisCheck)
+  .post(usersController.postUser);
+
+router.route('/hypeCount')
+  .get(hypeController.getHypeCount)
+  .post(hypeController.increaseHypeCount)
+  .delete(hypeController.deleteHypeEvent);
 
 export default router;
