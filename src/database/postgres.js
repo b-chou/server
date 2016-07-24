@@ -24,6 +24,7 @@ sequelize
     console.log('Unable to connect to the database:', err);
   });
 
+// Fans
 const User = sequelize.define('User', {
   displayName: Sequelize.STRING,
   avatar: Sequelize.INTEGER,
@@ -41,12 +42,6 @@ const Hypee = sequelize.define('Hypee', {
   start_time: Sequelize.STRING,
   end_time: Sequelize.STRING,
   day: Sequelize.INTEGER,
-});
-
-// Fans
-const Hyper = sequelize.define('Hyper', {
-  name: Sequelize.STRING,
-  avatar: Sequelize.INTEGER,
 });
 
 // Hype vote for Hypees
