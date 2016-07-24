@@ -26,4 +26,7 @@ router.route('/getCurrentEvents')
 router.route('/getHypeTimeline')
   .get(hypeController.getTimeline);
 
+router.route('/getSpecificEvent')
+  .get(hypeController.getSpecificEvent);
+
 export default router;

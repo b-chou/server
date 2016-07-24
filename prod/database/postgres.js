@@ -48,13 +48,19 @@ var Hypee = sequelize.define('Hypee', {
     type: _sequelize2.default.INTEGER,
     defaultValue: 0
   },
-  description: _sequelize2.default.STRING,
+  description: _sequelize2.default.STRING(600),
   location: _sequelize2.default.STRING,
   start_time: _sequelize2.default.STRING,
   end_time: _sequelize2.default.STRING,
-  day: _sequelize2.default.INTEGER
+  day: _sequelize2.default.INTEGER,
+  image: _sequelize2.default.STRING(300),
+  genre: _sequelize2.default.STRING(100),
+  upvotes: _sequelize2.default.INTEGER,
+  events: _sequelize2.default.INTEGER,
+  followers: _sequelize2.default.INTEGER,
+  album: _sequelize2.default.STRING,
+  time: _sequelize2.default.STRING
 });
-
 // Hype vote for Hypees
 var Hype = sequelize.define('Hype', {
   date: {

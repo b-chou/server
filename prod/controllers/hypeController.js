@@ -14,6 +14,7 @@ var _cron2 = _interopRequireDefault(_cron);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/* eslint-disable no-param-reassign */
 var CronJob = _cron2.default.CronJob;
 var schedule = [];
 // cache will clear when an event is deleted
@@ -171,7 +172,18 @@ var deleteHypeEvent = function deleteHypeEvent(req, res) {
 };
 // returns all events in an array
 var getAllEvents = function getAllEvents(req, res) {
-  _postgres2.default.Hypee.findAll().then(function (data) {
+  var options = {};
+  if (req.query.day) {
+    options.where = {
+      day: req.query.day
+    };
+  }
+  _postgres2.default.Hypee.findAll(options).then(function (data) {
+    return data.map(function (event) {
+      event.hypes = cache[event.id] || 0;
+      return event;
+    });
+  }).then(function (data) {
     return res.status(200).send({ events: data });
   });
 };

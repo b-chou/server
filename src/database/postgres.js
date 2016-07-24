@@ -37,13 +37,19 @@ const Hypee = sequelize.define('Hypee', {
     type: Sequelize.INTEGER,
     defaultValue: 0,
   },
-  description: Sequelize.STRING(500),
+  description: Sequelize.STRING(600),
   location: Sequelize.STRING,
   start_time: Sequelize.STRING,
   end_time: Sequelize.STRING,
   day: Sequelize.INTEGER,
+  image: Sequelize.STRING(300),
+  genre: Sequelize.STRING(100),
+  upvotes: Sequelize.INTEGER,
+  events: Sequelize.INTEGER,
+  followers: Sequelize.INTEGER,
+  album: Sequelize.STRING,
+  time: Sequelize.STRING,
 });
-
 // Hype vote for Hypees
 const Hype = sequelize.define('Hype', {
   date: {
