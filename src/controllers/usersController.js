@@ -45,4 +45,26 @@ const postUser = (req, res) => {
   }).then(() => res.sendStatus(300));
 };
 
-export default { redisCheck, postUser };
+// change user information
+const changeUserInfo = (req, res) => {
+  postGres.Users.find({
+    where: {
+      id: req.body.id,
+    },
+  }).then(userData => {
+    const changes = {
+      displayName: req.body.displayName || null,
+      avatar: req.body.avatar || null,
+    };
+    if (!changes.displayName) {
+      delete changes.displayName;
+    }
+    if (!changes.avatar) {
+      delete changes.avatar;
+    }
+    userData.updateAttributes(changes);
+    res.status(200).send({ changedAttributes: changes });
+  });
+};
+
+export default { redisCheck, postUser, changeUserInfo };

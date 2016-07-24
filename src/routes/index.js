@@ -9,11 +9,15 @@ const router = express.Router();
 // router.get('/api/users', usersController.getUsers);
 router.route('/validation')
   .get(usersController.redisCheck)
-  .post(usersController.postUser);
+  .post(usersController.postUser)
+  .put(usersController.changeUserInfo);
 
 router.route('/hypeCount')
   .get(hypeController.getHypeCount)
   .post(hypeController.increaseHypeCount)
   .delete(hypeController.deleteHypeEvent);
+
+router.route('/getAllEvents')
+  .get(hypeController.getAllEvents);
 
 export default router;

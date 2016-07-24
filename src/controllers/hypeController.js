@@ -2,6 +2,7 @@ import postGres from '../database/postgres';
 
 // cache will clear when an event is deleted
 const cache = {};
+
 // returns a numerical value given a 'Hypee' id -- get
 const getHypeCount = (req, res) => {
   if (cache[req.query.Hypee]) {
@@ -36,4 +37,10 @@ const deleteHypeEvent = (req, res) => {
   res.sendStatus(200);
 };
 
-export default { getHypeCount, increaseHypeCount, deleteHypeEvent };
+// returns all events in an array
+const getAllEvents = (req, res) => {
+  postGres.Hypee.findAll()
+    .then(data => res.status(200).send({ events: data }));
+};
+
+export default { getHypeCount, increaseHypeCount, deleteHypeEvent, getAllEvents };
