@@ -37,7 +37,7 @@ const Hypee = sequelize.define('Hypee', {
     type: Sequelize.INTEGER,
     defaultValue: 0,
   },
-  description: Sequelize.STRING,
+  description: Sequelize.STRING(500),
   location: Sequelize.STRING,
   start_time: Sequelize.STRING,
   end_time: Sequelize.STRING,
